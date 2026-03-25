@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Creator Catalyst Studio — 48-Hour Viral Launch Sprints</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #09090B;
+      --surface: #111113;
+      --surface-2: #18181B;
+      --border: rgba(255,255,255,0.06);
+      --border-hover: rgba(255,255,255,0.12);
+      --accent: #3B82F6;
+      --accent-glow: rgba(59,130,246,0.15);
+      --accent-soft: rgba(59,130,246,0.08);
+      --positive: #22C55E;
+      --positive-soft: rgba(34,197,94,0.10);
+      --warning: #EAB308;
+      --warning-soft: rgba(234,179,8,0.08);
+      --text: #FAFAFA;
+      --text-secondary: #A1A1AA;
+      --text-tertiary: #71717A;
+      --radius: 16px;
+      --radius-sm: 12px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    /* --- AMBIENT EFFECTS --- */
+    .ambient-glow {
+      position: fixed;
+      top: -40%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 600px;
+      background: radial-gradient(ellipse, rgba(59,130,246,0.05) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* --- SCROLL ANIMATIONS --- */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    /* --- NAV --- */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 0 24px;
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      background: rgba(9,9,11,0.8);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 56px;
+    }
+    .nav-brand {
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+      color: var(--text);
+    }
+    .nav-brand span { color: var(--text-tertiary); font-weight: 400; }
+    .nav-cta {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--accent);
+      text-decoration: none;
+      padding: 8px 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(59,130,246,0.25);
+      transition: all 0.3s ease;
+    }
+    .nav-cta:hover {
+      background: var(--accent-soft);
+      border-color: rgba(59,130,246,0.4);
+    }
+
+    /* --- SECTION LABEL --- */
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 16px;
+    }
+
+    /* --- BUTTONS --- */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent);
+      color: #fff;
+      padding: 14px 32px;
+      border-radius: 999px;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 0 0 0 rgba(59,130,246,0);
+      position: relative;
+    }
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 32px rgba(59,130,246,0.3), 0 4px 16px rgba(59,130,246,0.2);
+    }
+    .btn:active { transform: translateY(0); }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid rgba(59,130,246,0.25);
+      color: var(--accent);
+    }
+    .btn-outline:hover {
+      background: var(--accent-soft);
+      border-color: rgba(59,130,246,0.4);
+      box-shadow: none;
+      transform: translateY(-1px);
+    }
+    .btn-arrow { transition: transform 0.3s ease; }
+    .btn:hover .btn-arrow { transform: translateX(3px); }
+
+    /* --- HERO --- */
+    .hero {
+      padding: 140px 24px 100px;
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    .hero h1 {
+      font-size: clamp(36px, 5vw, 60px);
+      font-weight: 700;
+      letter-spacing: -2px;
+      line-height: 1.05;
+      margin-bottom: 24px;
+      background: linear-gradient(180deg, #FAFAFA 0%, #A1A1AA 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero p {
+      font-size: 17px;
+      color: var(--text-secondary);
+      max-width: 560px;
+      margin: 0 auto 40px;
+      line-height: 1.7;
+    }
+    .hero-note {
+      margin-top: 20px;
+      font-size: 13px;
+      color: var(--text-tertiary);
+    }
+
+    /* --- PROBLEM --- */
+    .problem {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .problem-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+      max-width: 1060px;
+      margin: 0 auto;
+      padding: 100px 24px;
+    }
+    .problem h2 {
+      font-size: clamp(26px, 3vw, 36px);
+      font-weight: 600;
+      letter-spacing: -0.8px;
+      line-height: 1.15;
+    }
+    .problem p {
+      color: var(--text-secondary);
+      font-size: 16px;
+      margin-top: 16px;
+      line-height: 1.7;
+    }
+    .callout {
+      border-left: 2px solid var(--accent);
+      padding: 14px 20px;
+      margin-top: 24px;
+      font-style: italic;
+      color: var(--text-secondary);
+      font-size: 15px;
+      background: var(--accent-soft);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    }
+
+    /* --- SOLUTION --- */
+    .solution {
+      padding: 100px 24px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    .solution .pill {
+      display: inline-block;
+      background: var(--accent-soft);
+      border: 1px solid rgba(59,130,246,0.15);
+      border-radius: 999px;
+      padding: 6px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 24px;
+    }
+    .solution h2 {
+      font-size: clamp(26px, 3vw, 36px);
+      font-weight: 600;
+      max-width: 560px;
+      margin: 0 auto 16px;
+      letter-spacing: -0.5px;
+    }
+    .solution > p {
+      color: var(--text-secondary);
+      max-width: 520px;
+      margin: 0 auto 56px;
+      font-size: 16px;
+      line-height: 1.7;
+    }
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    .feature {
+      text-align: left;
+      padding: 28px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      transition: border-color 0.3s ease;
+    }
+    .feature:hover { border-color: var(--border-hover); }
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--accent-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      margin-bottom: 16px;
+    }
+    .feature h4 { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+    .feature p { font-size: 14px; color: var(--text-tertiary); line-height: 1.6; }
+
+    /* --- INCLUDED --- */
+    .included {
+      padding: 100px 24px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .included-inner { max-width: 860px; margin: 0 auto; }
+    .included h2 {
+      font-size: clamp(26px, 3vw, 36px);
+      font-weight: 600;
+      margin-bottom: 40px;
+      letter-spacing: -0.5px;
+    }
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    .incl-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      transition: border-color 0.3s ease, transform 0.3s ease;
+    }
+    .incl-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+    }
+    .incl-card .card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: var(--accent-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      margin-bottom: 16px;
+    }
+    .incl-card h4 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+    .incl-card p { font-size: 14px; color: var(--text-tertiary); line-height: 1.6; }
+
+    /* --- PRICING --- */
+    .pricing {
+      padding: 100px 24px;
+      position: relative;
+      z-index: 1;
+    }
+    .pricing-inner { max-width: 960px; margin: 0 auto; }
+    .pricing h2 {
+      font-size: clamp(26px, 3vw, 36px);
+      font-weight: 600;
+      margin-bottom: 10px;
+      text-align: center;
+      letter-spacing: -0.5px;
+    }
+    .pricing-sub {
+      text-align: center;
+      color: var(--text-secondary);
+      margin-bottom: 56px;
+      font-size: 16px;
+    }
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .price-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      position: relative;
+      transition: border-color 0.3s ease, transform 0.3s ease;
+    }
+    .price-card:hover { border-color: var(--border-hover); }
+    .price-card.featured {
+      background: var(--surface-2);
+      border-color: rgba(59,130,246,0.3);
+    }
+    .price-card.featured:hover {
+      border-color: rgba(59,130,246,0.5);
+      transform: translateY(-2px);
+    }
+    .popular-badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+    .price-name {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 12px;
+    }
+    .price-amount {
+      font-size: 44px;
+      font-weight: 700;
+      letter-spacing: -1.5px;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .price-period {
+      font-size: 14px;
+      color: var(--text-tertiary);
+      margin-bottom: 24px;
+    }
+    .price-features {
+      list-style: none;
+      margin-bottom: 28px;
+    }
+    .price-features li {
+      font-size: 14px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-secondary);
+    }
+    .price-features li:last-child { border-bottom: none; }
+    .price-features li::before {
+      content: "✓";
+      color: var(--positive);
+      font-weight: 700;
+      flex-shrink: 0;
+      font-size: 13px;
+    }
+    .price-card .btn { width: 100%; text-align: center; justify-content: center; }
+
+    /* --- PROOF --- */
+    .proof {
+      padding: 100px 24px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .proof-inner { max-width: 680px; margin: 0 auto; }
+    .proof h2 {
+      font-size: clamp(26px, 3vw, 36px);
+      font-weight: 600;
+      margin-bottom: 28px;
+      letter-spacing: -0.5px;
+    }
+    .proof-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    .proof-card::after {
+      content: "First sprint results — arriving soon";
+      position: absolute;
+      inset: 0;
+      background: rgba(9,9,11,0.85);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      color: var(--text-tertiary);
+      font-style: italic;
+      letter-spacing: -0.2px;
+    }
+    .proof-metric {
+      font-size: 56px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: -2px;
+    }
+    .proof-desc {
+      font-size: 17px;
+      font-style: italic;
+      color: var(--text-secondary);
+      margin-top: 12px;
+    }
+
+    /* --- FAQ --- */
+    .faq-section {
+      padding: 100px 24px;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    .faq-section h2 {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 40px;
+      text-align: center;
+      letter-spacing: -0.5px;
+    }
+    .faq-item { border-bottom: 1px solid var(--border); }
+    .faq-q {
+      width: 100%;
+      background: none;
+      border: none;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      padding: 22px 0;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: color 0.2s;
+    }
+    .faq-q:hover { color: var(--text-secondary); }
+    .faq-q .chevron {
+      color: var(--text-tertiary);
+      font-size: 16px;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .faq-q.open .chevron { transform: rotate(180deg); }
+    .faq-a {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .faq-a p {
+      padding: 0 0 22px;
+      font-size: 15px;
+      color: var(--text-tertiary);
+      line-height: 1.7;
+    }
+
+    /* --- CTA --- */
+    .cta-section {
+      border-top: 1px solid var(--border);
+      padding: 120px 24px;
+      text-align: center;
+      position: relative;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(59,130,246,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta-section h2 {
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 600;
+      max-width: 520px;
+      margin: 0 auto 18px;
+      letter-spacing: -0.8px;
+      line-height: 1.1;
+      position: relative;
+    }
+    .cta-section p {
+      color: var(--text-secondary);
+      max-width: 440px;
+      margin: 0 auto 40px;
+      font-size: 16px;
+      position: relative;
+      line-height: 1.7;
+    }
+    .cta-note {
+      margin-top: 20px;
+      font-size: 13px;
+      color: var(--text-tertiary);
+      position: relative;
+    }
+
+    /* --- FOOTER --- */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 24px;
+      text-align: center;
+    }
+    footer p { font-size: 13px; color: var(--text-tertiary); }
+    footer a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    footer a:hover { color: var(--accent); }
+
+    /* --- RESPONSIVE --- */
+    @media (max-width: 768px) {
+      .hero { padding: 120px 20px 80px; }
+      .problem-inner { grid-template-columns: 1fr; gap: 40px; padding: 80px 20px; }
+      .features, .cards-grid, .pricing-grid { grid-template-columns: 1fr; }
+      .nav-brand span { display: none; }
+      .price-card.featured { order: -1; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="ambient-glow"></div>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <div class="nav-brand">Creator Catalyst <span>/ Studio</span></div>
+      <a href="#pricing" class="nav-cta">Book a Sprint</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero reveal">
+    <div class="section-label">Creator Catalyst Studio</div>
+    <h1>Your next launch shouldn't be quiet.</h1>
+    <p>We build the creator pod, run the campaign, and ship you a 48-hour viral launch sprint — while you stay focused on the product.</p>
+    <a href="#pricing" class="btn">Book Your Sprint <span class="btn-arrow">→</span></a>
+    <p class="hero-note">For SaaS and AI tools ready to launch with real creator traction.</p>
+  </section>
+
+  <!-- PROBLEM -->
+  <div class="problem">
+    <div class="problem-inner">
+      <div class="reveal">
+        <div class="section-label">The Problem</div>
+        <h2>Most SaaS launches get ignored. Not because the product is bad.</h2>
+      </div>
+      <div class="reveal reveal-delay-1">
+        <p>You built something real. But the launch goes out to your email list, maybe a Product Hunt post, and a few tweets from your personal account.</p>
+        <p>The algorithm doesn't care. Neither does anyone else.</p>
+        <p>What drives early traction? Creators. Real people talking about real tools to real audiences — on TikTok, LinkedIn, and X.</p>
+        <div class="callout">Finding the right creators, briefing them, and managing the campaign takes time you don't have. That's what we do.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOLUTION -->
+  <section class="solution">
+    <div class="reveal">
+      <span class="pill">The Sprint</span>
+      <h2>A 48-hour creator sprint. Fully managed. Results guaranteed.</h2>
+      <p>We source and brief a pod of 8–12 micro-creators in your category. You get coordinated coverage across TikTok, LinkedIn, and X — posted within 48 hours.</p>
+    </div>
+    <div class="features">
+      <div class="feature reveal">
+        <div class="feature-icon">🎯</div>
+        <h4>We source</h4>
+        <p>Hand-selected creators matched to your product category and audience.</p>
+      </div>
+      <div class="feature reveal reveal-delay-1">
+        <div class="feature-icon">📋</div>
+        <h4>We direct</h4>
+        <p>We write the brief, define the angles, and manage creative direction end to end.</p>
+      </div>
+      <div class="feature reveal reveal-delay-2">
+        <div class="feature-icon">📱</div>
+        <h4>You get results</h4>
+        <p>Coordinated multi-platform content drop within 48 hours of kickoff.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- INCLUDED -->
+  <div class="included">
+    <div class="included-inner">
+      <div class="reveal">
+        <div class="section-label">What's Included</div>
+        <h2>Here's exactly what you get.</h2>
+      </div>
+      <div class="cards-grid">
+        <div class="incl-card reveal">
+          <div class="card-icon">🎯</div>
+          <h4>Creator Pod (8–12 creators)</h4>
+          <p>Hand-selected micro-creators in your product category. Minimum 10K engaged followers each. Pre-screened for audience fit and content quality.</p>
+        </div>
+        <div class="incl-card reveal reveal-delay-1">
+          <div class="card-icon">📋</div>
+          <h4>Creative Brief + Direction</h4>
+          <p>We write the brief, define the angles, and direct the campaign. You review and approve. We handle everything after.</p>
+        </div>
+        <div class="incl-card reveal reveal-delay-1">
+          <div class="card-icon">📱</div>
+          <h4>Coordinated Content Drop</h4>
+          <p>All creators post within a 48-hour window for algorithmic amplification. Multiple formats: demos, reactions, tutorials, use-case clips.</p>
+        </div>
+        <div class="incl-card reveal reveal-delay-2">
+          <div class="card-icon">📊</div>
+          <h4>Campaign Report</h4>
+          <p>Full breakdown: creator performance, reach, engagement, top-performing content, and recommended next steps.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRICING -->
+  <section class="pricing" id="pricing">
+    <div class="pricing-inner">
+      <div class="reveal">
+        <div class="section-label" style="text-align:center;">Pricing</div>
+        <h2>Choose your sprint.</h2>
+        <p class="pricing-sub">All sprints include a 100% satisfaction guarantee.</p>
+      </div>
+      <div class="pricing-grid">
+        <div class="price-card reveal">
+          <div class="price-name">Sprint</div>
+          <div class="price-amount">$4,900</div>
+          <div class="price-period">one-time</div>
+          <ul class="price-features">
+            <li>8 creators</li>
+            <li>48-hour coordinated campaign</li>
+            <li>Creative brief + direction</li>
+            <li>Campaign report</li>
+            <li>1 content revision round</li>
+          </ul>
+          <a href="https://buy.stripe.com/7sY4gyeAPcAK6aO1Uq4Rq03" class="btn btn-outline">Book Sprint</a>
+        </div>
+        <div class="price-card featured reveal reveal-delay-1">
+          <div class="popular-badge">Most Popular</div>
+          <div class="price-name">Amplify</div>
+          <div class="price-amount">$9,500</div>
+          <div class="price-period">one-time</div>
+          <ul class="price-features">
+            <li>12 creators</li>
+            <li>48-hour coordinated campaign</li>
+            <li>Full creative direction + review</li>
+            <li>Paid amplification on top 3 posts</li>
+            <li>Full report + optimization notes</li>
+          </ul>
+          <a href="https://buy.stripe.com/7sY4gyeAPcAK6aO1Uq4Rq03" class="btn">Book Amplify <span class="btn-arrow">→</span></a>
+        </div>
+        <div class="price-card reveal reveal-delay-2">
+          <div class="price-name">Retainer</div>
+          <div class="price-amount">$7,500</div>
+          <div class="price-period">per month</div>
+          <ul class="price-features">
+            <li>2 sprints per month</li>
+            <li>Dedicated creator roster</li>
+            <li>Monthly performance review</li>
+            <li>Priority creator access</li>
+            <li>Strategy call included</li>
+          </ul>
+          <a href="#" class="btn btn-outline">Start Retainer</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROOF -->
+  <div class="proof">
+    <div class="proof-inner reveal">
+      <div class="section-label">Proof</div>
+      <h2>What a sprint actually looks like.</h2>
+      <div class="proof-card">
+        <div class="proof-metric">2.1M</div>
+        <div class="proof-desc">"Organic impressions in 72 hours. 11 creators. One AI writing tool."</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <section class="faq-section">
+    <h2 class="reveal">Questions</h2>
+    <div class="faq-item reveal">
+      <button class="faq-q" onclick="toggleFaq(this)">What kind of tools is this designed for? <span class="chevron">▾</span></button>
+      <div class="faq-a"><p>SaaS products, AI tools, and developer tools with a clear use case that can be demonstrated visually. If a creator can show it working in 60 seconds, it's a fit.</p></div>
+    </div>
+    <div class="faq-item reveal reveal-delay-1">
+      <button class="faq-q" onclick="toggleFaq(this)">How do you find the creators? <span class="chevron">▾</span></button>
+      <div class="faq-a"><p>We maintain a vetted network of micro-creators across TikTok, LinkedIn, and X. We match based on category, audience demographics, and engagement quality — not just follower count.</p></div>
+    </div>
+    <div class="faq-item reveal reveal-delay-1">
+      <button class="faq-q" onclick="toggleFaq(this)">What if I don't like the content before it goes live? <span class="chevron">▾</span></button>
+      <div class="faq-a"><p>You review and approve before anything is posted. If it doesn't meet your standards, we revise. If we can't get it right, you don't pay.</p></div>
+    </div>
+    <div class="faq-item reveal reveal-delay-2">
+      <button class="faq-q" onclick="toggleFaq(this)">How fast can we start? <span class="chevron">▾</span></button>
+      <div class="faq-a"><p>Sprint kickoff is within 48 hours of booking. Content goes live within 48 hours of kickoff.</p></div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section reveal">
+    <h2>48 hours from now, your tool could be trending.</h2>
+    <p>Limited sprint slots available each month. Once they're gone, you're on the waitlist.</p>
+    <a href="#pricing" class="btn">Book Your Sprint <span class="btn-arrow">→</span></a>
+    <p class="cta-note">Limited slots · 100% satisfaction guarantee</p>
+  </section>
+
+  <footer>
+    <p>Creator Catalyst Studio · <a href="#pricing">Book a Sprint</a> · Built for SaaS founders who want their launch to work.</p>
+  </footer>
+
+  <script>
+    /* Intersection Observer for reveals */
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    /* FAQ accordion */
+    function toggleFaq(btn) {
+      const answer = btn.nextElementSibling;
+      const isOpen = btn.classList.contains('open');
+      document.querySelectorAll('.faq-q.open').forEach(q => {
+        q.classList.remove('open');
+        q.nextElementSibling.style.maxHeight = null;
+      });
+      if (!isOpen) {
+        btn.classList.add('open');
+        answer.style.maxHeight = answer.scrollHeight + 'px';
+      }
+    }
+  </script>
+</body>
+</html>
